@@ -1,0 +1,5 @@
+camera_ip_info: rtsp://admin:9562432315@192.168.1.14:554/h264Preview_01_main
+from_addr: tap.emailer@gmail.com
+to_addr:
+- troyap111@gmail.com
+password: shsslnngjsnayfew
