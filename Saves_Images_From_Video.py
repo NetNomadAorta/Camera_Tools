@@ -4,8 +4,8 @@ import os
 # User parameters
 VIDEOS_PATHS = "Saved_Videos" # Change this to the path of your video files
 VIDEO_PATH = "Saved_Videos/2022_11_09-16_27_15-Human.mp4"  # Change this to the path of your video file
-OUTPUT_FOLDER = "Images/Screenshot_Images"  # Change this to the desired output folder
-FRAMES_PER_SECOND = 0.25  # Change this to control how many frames to save per second
+OUTPUT_FOLDER = "Screenshot_Images"  # Change this to the desired output folder
+FRAMES_PER_SECOND = 1  # Change this to control how many frames to save per second
 
 def save_frames(video_path, output_folder, frames_per_second, video_index):
     if not os.path.exists(output_folder):

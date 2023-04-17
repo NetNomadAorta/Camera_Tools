@@ -16,9 +16,11 @@ import shutil
 
 
 # User parameters
-SAVE_NAME_OD = "./Models-OD/Animals-ResNet50-0.model"
-DATASET_PATH = "./Training_Data/" + SAVE_NAME_OD.split("./Models-OD/",1)[1].split("-",1)[0] +"/"
-IMAGE_SIZE              = int(re.findall(r'\d+', SAVE_NAME_OD)[-1] ) # Row and column number 
+# SAVE_NAME_OD = "./Models-OD/Animals-0.model"
+SAVE_NAME_OD = r"C:\Users\troya\.spyder-py3\Cobra_Vision_Tools\Models\Vehicle_PPL.model".replace("\\", "/")
+# DATASET_PATH = "./Training_Data/" + SAVE_NAME_OD.split("./Models-OD/",1)[1].split("-",1)[0] +"/"
+DATASET_PATH = r"C:\Users\troya\.spyder-py3\Cobra_Vision_Tools".replace("\\", "/") + "/Training_Data/" + SAVE_NAME_OD.split("/Models/", 1)[1].split(".model", 1)[0] + "/"
+MIN_IMAGE_SIZE          = int(1080*1.0) # Minimum size of image (ASPECT RATIO IS KEPT SO DONT WORRY). So for 1600x2400 -> 800x1200
 TO_PREDICT_PATH         = "./Images/Prediction_Images/To_Predict/"
 # TO_PREDICT_PATH         = "//mcrtp-sftp-01/aoitool/SMiPE4-623/XDCC000109C2/"            # USE FOR XDisplay LOTS!
 PREDICTED_PATH          = "./Images/Prediction_Images/Predicted_Images/"
@@ -29,6 +31,7 @@ SAVE_ORIGINAL_IMAGE     = False
 SAVE_CROPPED_IMAGES     = False
 DIE_SPACING_SCALE       = 0.99
 MIN_SCORE               = 0.7 # Default 0.5
+# SKIP_FRAMES             = 1.01 # Default 6 - PUT DECIMAL TO INVALID AND NOT SKIP ANY FRAMES
 
 
 def time_convert(sec):
@@ -78,7 +81,10 @@ classes_1 = [i[1]['name'] for i in categories.items()]
 
 
 # lets load the faster rcnn model
-model_1 = models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
+model_1 = models.detection.fasterrcnn_resnet50_fpn(pretrained=True,
+                                                   min_size=MIN_IMAGE_SIZE,
+                                                   max_size=MIN_IMAGE_SIZE*2
+                                                   )
 in_features = model_1.roi_heads.box_predictor.cls_score.in_features # we need to change the head
 model_1.roi_heads.box_predictor = models.detection.faster_rcnn.FastRCNNPredictor(in_features, n_classes_1)
 
@@ -118,11 +124,12 @@ for video_name in os.listdir(TO_PREDICT_PATH):
     
     
     video_capture = cv2.VideoCapture(video_path)
+    fps = video_capture.get(cv2.CAP_PROP_FPS)
     
     success, image_b4_color = video_capture.read()
     
     fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-    video_out = cv2.VideoWriter(PREDICTED_PATH + video_name, fourcc, 5.0, 
+    video_out = cv2.VideoWriter(PREDICTED_PATH + video_name, fourcc, fps,
                                 (int(image_b4_color.shape[1]), 
                                  int(image_b4_color.shape[0])
                                  )
@@ -134,9 +141,9 @@ for video_name in os.listdir(TO_PREDICT_PATH):
         if not success:
             break
         
-        if count % 6 != 0:
-            count += 1
-            continue
+        # if count % SKIP_FRAMES != 0:
+        #     count += 1
+        #     continue
         
         image = cv2.cvtColor(image_b4_color, cv2.COLOR_BGR2RGB)
         
@@ -160,21 +167,21 @@ for video_name in os.listdir(TO_PREDICT_PATH):
         labels_found = [str(classes_1[class_index]) 
                         for index, class_index in enumerate(die_class_indexes)]
         
-        boxes_widened = dieCoordinates
-        # Widens boxes
-        for i in range(len(dieCoordinates)):
-            box_width = dieCoordinates[i,2]-dieCoordinates[i,0]
-            box_height = dieCoordinates[i,3]-dieCoordinates[i,1]
-            
-            # Width
-            boxes_widened[i, 0] = max(dieCoordinates[i][0] - int(box_width/3), 0)
-            boxes_widened[i, 2] = min(dieCoordinates[i][2] + int(box_width/3), transformed_image.shape[2])
-            
-            # Height
-            boxes_widened[i, 1] = max(dieCoordinates[i][1] - int(box_height/3), 0)
-            boxes_widened[i, 3] = min(dieCoordinates[i][3] + int(box_height/3), transformed_image.shape[1])
-        
-        dieCoordinates = boxes_widened
+        # boxes_widened = dieCoordinates
+        # # Widens boxes
+        # for i in range(len(dieCoordinates)):
+        #     box_width = dieCoordinates[i,2]-dieCoordinates[i,0]
+        #     box_height = dieCoordinates[i,3]-dieCoordinates[i,1]
+        #
+        #     # Width
+        #     boxes_widened[i, 0] = max(dieCoordinates[i][0] - int(box_width/3), 0)
+        #     boxes_widened[i, 2] = min(dieCoordinates[i][2] + int(box_width/3), transformed_image.shape[2])
+        #
+        #     # Height
+        #     boxes_widened[i, 1] = max(dieCoordinates[i][1] - int(box_height/3), 0)
+        #     boxes_widened[i, 3] = min(dieCoordinates[i][3] + int(box_height/3), transformed_image.shape[1])
+        #
+        # dieCoordinates = boxes_widened
         
         if SAVE_ANNOTATED_IMAGES:
             predicted_image = draw_bounding_boxes(transformed_image,
