@@ -5,16 +5,14 @@ import os
 import sys
 import torch
 from torchvision import models
-import albumentations as A  # our data augmentation library
 # remove arnings (optional)
 import warnings
 warnings.filterwarnings("ignore")
 import time
 from datetime import datetime
 from torchvision.utils import draw_bounding_boxes
-from pycocotools.coco import COCO
+import torchvision
 # Now, we will define our transforms
-from albumentations.pytorch import ToTensorV2
 import winsound
 import dropbox
 import smtplib
@@ -182,11 +180,11 @@ dataset_path = DATASET_PATH
 
 if SET_VIDEO_RECORD_ON_OD or EMAILER_TOGGLE:
     #load classes
-    coco = COCO(os.path.join(dataset_path, "train", "_annotations.coco.json"))
-    categories = coco.cats
-    n_classes_1 = len(categories.keys())
-
-    classes_1 = [i[1]['name'] for i in categories.items()]
+    f = open(os.path.join(dataset_path, "train", "_annotations.coco.json"))
+    # f = open(dataset_path + "train/_annotations.coco.json")
+    data = json.load(f)
+    n_classes_1 = len(data['categories'])
+    classes_1 = [i['name'] for i in data["categories"]]
 
 
     # lets load the faster rcnn model
@@ -242,10 +240,7 @@ if SET_VIDEO_RECORD_FORCE:
                          )
                         )
 
-transforms_1 = A.Compose([
-    # A.Resize(int(frame.shape[0]/IMAGE_SCALER), int(frame.shape[1]/2IMAGE_SCALER)),
-    ToTensorV2()
-])
+transforms_1 = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])
 
 if os.path.isfile("results_log-2.json"):
     f = open("results_log-2.json")
@@ -300,8 +295,7 @@ while True:
                 min_width_vehicle = width * MIN_OBJ_FRACT_VEHICLE
                 min_height_person = height * MIN_OBJ_FRACT_PERSON
 
-                transformed_image = transforms_1(image=image)
-                transformed_image = transformed_image["image"]
+                transformed_image = transforms_1(image)
 
                 with torch.no_grad():
                     prediction_1 = model_1([(transformed_image/255).to(device)])
