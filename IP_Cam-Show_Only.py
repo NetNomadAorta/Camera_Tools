@@ -66,7 +66,7 @@ if vc.isOpened(): # try to get the first frame
     rval, frame = vc.read()
 else:
     rval = False
-
+print("OKAY", rval)
 # For recording video
 if SET_VIDEO_RECORD_FORCE:
     winsound.Beep(frequency, 40)
@@ -122,7 +122,7 @@ while True:
                   end="\r")
             fps_start_time = time.time()
     else:
-        vc = cv2.VideoCapture('rtsp://admin:9562432315@192.168.86.31:554/h264Preview_01_main')
+        vc = cv2.VideoCapture(camera_ip_info)
         
         if vc.isOpened(): # try to get the first frame
             rval, frame = vc.read()

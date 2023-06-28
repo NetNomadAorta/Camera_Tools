@@ -17,10 +17,10 @@ import shutil
 
 # User parameters
 # SAVE_NAME_OD = "./Models-OD/Animals-0.model"
-SAVE_NAME_OD = r"C:\Users\troya\.spyder-py3\Cobra_Vision_Tools\Models\Vehicle_PPL.model".replace("\\", "/")
+SAVE_NAME_OD = r"C:\Users\troya\.spyder-py3\Cobra_Vision_Tools\Models\Vehicle_PPL_PPE.model".replace("\\", "/")
 # DATASET_PATH = "./Training_Data/" + SAVE_NAME_OD.split("./Models-OD/",1)[1].split("-",1)[0] +"/"
 DATASET_PATH = r"C:\Users\troya\.spyder-py3\Cobra_Vision_Tools".replace("\\", "/") + "/Training_Data/" + SAVE_NAME_OD.split("/Models/", 1)[1].split(".model", 1)[0] + "/"
-MIN_IMAGE_SIZE          = int(1080*1.0) # Minimum size of image (ASPECT RATIO IS KEPT SO DONT WORRY). So for 1600x2400 -> 800x1200
+MIN_IMAGE_SIZE          = int(1080*2.0) # Minimum size of image (ASPECT RATIO IS KEPT SO DONT WORRY). So for 1600x2400 -> 800x1200
 TO_PREDICT_PATH         = "./Images/Prediction_Images/To_Predict/"
 # TO_PREDICT_PATH         = "//mcrtp-sftp-01/aoitool/SMiPE4-623/XDCC000109C2/"            # USE FOR XDisplay LOTS!
 PREDICTED_PATH          = "./Images/Prediction_Images/Predicted_Images/"
