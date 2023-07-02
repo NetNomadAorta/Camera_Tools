@@ -2,3 +2,5 @@
 *.jpg
 *.mp4
 *.model
+*.pyc
+*.pt

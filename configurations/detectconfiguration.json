@@ -1,0 +1,26 @@
+{
+    "YOLOv7":{
+        "WEIGHTS" :             "./models/Vehicle_PPL_PPE-Y7.pt",
+        "MIN_IMAGE_SIZE" :                          960,
+        "MIN_SCORE" :                               0.55,
+        "MIN_OBJ_FRACT_VEHICLE" :                   0.025,
+        "MIN_OBJ_FRACT_PERSON":                     0.035,
+        "FRACTION_BOX_NEEDED_TO_MOVE" :             0.15,
+        "FRACTION_BOX_NEEDED_TO_MOVE_PERSON_ONLY" : 0.15,
+        "SHOWS_INACTIVE_TOGGGLE" :                  "True",
+        "IMSHOW_TOGGLE" :                           "True",
+        "MAX_LOG_ENTRIES" :                         30
+    },
+    "ResNet50":{
+        "WEIGHTS" :             "./Modelo/Vehicle_PPL_PPE.model",
+        "MIN_IMAGE_SIZE" :                          2160,
+        "MIN_SCORE" :                               0.75,
+        "MIN_OBJ_FRACT_VEHICLE" :                   0.025,
+        "MIN_OBJ_FRACT_PERSON":                     0.035,
+        "FRACTION_BOX_NEEDED_TO_MOVE" :             0.15,
+        "FRACTION_BOX_NEEDED_TO_MOVE_PERSON_ONLY" : 0.15,
+        "SHOWS_INACTIVE_TOGGGLE" :                  "True",
+        "IMSHOW_TOGGLE" :                           "True",
+        "MAX_LOG_ENTRIES" :                         30
+    }
+}
