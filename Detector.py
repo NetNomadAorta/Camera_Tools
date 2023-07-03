@@ -129,8 +129,9 @@ class Detector:
 
             # Run inference
             if self.device.type != 'cpu':
-                self.model(torch.zeros(1, 3, self.imgsz, self.imgsz).to(self.device).type_as(
-                    next(self.model.parameters())))  # run once
+                with torch.no_grad():
+                    self.model(torch.zeros(1, 3, self.imgsz, self.imgsz).to(self.device).type_as(
+                        next(self.model.parameters())))  # run once
 
     def put_text(self, image, label, start_point, font, fontScale, color, thickness):
         cv2.putText(image, label, start_point, font, fontScale, (0, 0, 0), thickness + 2)
@@ -283,74 +284,75 @@ class Detector:
             return coordinates, scores, class_indexes
 
         elif self.configuration.model_name == "YOLOv7":
-            frame_image_rgv = frame_rgb
+            with torch.no_grad():
+                frame_image_rgv = frame_rgb
 
-            t0 = time.time()
-            # STEPPING THROUGH IMAGES
-            img0 = frame_image_rgv  # BGR # INSERT IMAGE HERE!!!
-            im0s = img0
-            # Padded resize
-            img = self.letterbox(img0, self.imgsz, stride=32)[0]
+                t0 = time.time()
+                # STEPPING THROUGH IMAGES
+                img0 = frame_image_rgv  # BGR # INSERT IMAGE HERE!!!
+                im0s = img0
+                # Padded resize
+                img = self.letterbox(img0, self.imgsz, stride=32)[0]
 
-            # Convert
-            img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB, to 3x416x416
-            img = np.ascontiguousarray(img)
+                # Convert
+                img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB, to 3x416x416
+                img = np.ascontiguousarray(img)
 
-            img = torch.from_numpy(img).to(self.device)
-            img = img.half() if self.half else img.float()  # uint8 to fp16/32
-            img /= 255.0  # 0 - 255 to 0.0 - 1.0
-            if img.ndimension() == 3:
-                img = img.unsqueeze(0)
+                img = torch.from_numpy(img).to(self.device)
+                img = img.half() if self.half else img.float()  # uint8 to fp16/32
+                img /= 255.0  # 0 - 255 to 0.0 - 1.0
+                if img.ndimension() == 3:
+                    img = img.unsqueeze(0)
 
-            old_img_w = old_img_h = self.imgsz
-            old_img_b = 1
+                old_img_w = old_img_h = self.imgsz
+                old_img_b = 1
 
-            # Warmupdet
-            if self.device.type != 'cpu' and (
-                    old_img_b != img.shape[0] or old_img_h != img.shape[2] or old_img_w != img.shape[3]):
-                old_img_b = img.shape[0]
-                old_img_h = img.shape[2]
-                old_img_w = img.shape[3]
-                for i in range(3):
-                    self.model(img, augment=self.opt.augment)[0]
+                # Warmupdet
+                if self.device.type != 'cpu' and (
+                        old_img_b != img.shape[0] or old_img_h != img.shape[2] or old_img_w != img.shape[3]):
+                    old_img_b = img.shape[0]
+                    old_img_h = img.shape[2]
+                    old_img_w = img.shape[3]
+                    for i in range(3):
+                        self.model(img, augment=self.opt.augment)[0]
 
-            # Inference
-            t1 = self.time_synchronized()
-            pred = self.model(img, augment=self.opt.augment)[0]
-            t2 = self.time_synchronized()
-            print("Inference Time:", (t2-t1) )
+                # Inference
+                t1 = self.time_synchronized()
+                pred = self.model(img, augment=self.opt.augment)[0]
+                t2 = self.time_synchronized()
+                print("Inference Time:", (t2-t1) )
 
-            # Apply NMS
-            pred = self.non_max_suppression(pred, self.configuration.MIN_SCORE, self.opt.iou_thres,
-                                            classes=self.opt.classes, agnostic=self.opt.agnostic_nms)
-            t3 = self.time_synchronized()
+                # Apply NMS
+                pred = self.non_max_suppression(pred, self.configuration.MIN_SCORE, self.opt.iou_thres,
+                                                classes=self.opt.classes, agnostic=self.opt.agnostic_nms)
+                t3 = self.time_synchronized()
 
-            # Process detections
-            for i, det in enumerate(pred):  # detections per image
-                s, im0, frame_useless = '', im0s, getattr(self.dataset, 'frame', 0)
+                # Process detections
+                for i, det in enumerate(pred):  # detections per image
+                    s, im0, frame_useless = '', im0s, getattr(self.dataset, 'frame', 0)
 
-                gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
-                if len(det):
-                    # Rescale boxes from img_size to im0 size
-                    det[:, :4] = self.scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
+                    gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
+                    if len(det):
+                        # Rescale boxes from img_size to im0 size
+                        det[:, :4] = self.scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
 
-                # return det
+                    # return det
 
-                coordinates = []
-                scores = []
-                class_indexes = []
-                for *xyxy, conf, cls in reversed(det):
-                    x1 = int(xyxy[0])
-                    y1 = int(xyxy[1])
-                    x2 = int(xyxy[2])
-                    y2 = int(xyxy[3])
-                    if conf > self.configuration.MIN_SCORE:
-                        coordinates.append([x1, y1, x2, y2])
-                        scores.append(conf.item())
-                        class_indexes.append(int(cls) + 1)
-                        # print([x1, y1, x2, y2], conf.item(), int(cls))
+                    coordinates = []
+                    scores = []
+                    class_indexes = []
+                    for *xyxy, conf, cls in reversed(det):
+                        x1 = int(xyxy[0])
+                        y1 = int(xyxy[1])
+                        x2 = int(xyxy[2])
+                        y2 = int(xyxy[3])
+                        if conf > self.configuration.MIN_SCORE:
+                            coordinates.append([x1, y1, x2, y2])
+                            scores.append(conf.item())
+                            class_indexes.append(int(cls) + 1)
+                            # print([x1, y1, x2, y2], conf.item(), int(cls))
 
-                return np.array(coordinates), np.array(scores), np.array(class_indexes)
+                    return np.array(coordinates), np.array(scores), np.array(class_indexes)
 
     def safety(self, image, coordinates, scores, class_indexes, is_det_frame=True):
         # Setting up for text and rectangle in cv2

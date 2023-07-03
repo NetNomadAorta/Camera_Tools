@@ -1,194 +1,32 @@
 [
-    [
-        {
-            "coordinate": [
-                1441,
-                1163,
-                1641,
-                1266
-            ],
-            "score": "0.9208984375",
-            "label": "Active_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1441,
-                1162,
-                1641,
-                1266
-            ],
-            "score": "0.9248046875",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1440,
-                1162,
-                1643,
-                1270
-            ],
-            "score": "0.91796875",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1440,
-                1161,
-                1643,
-                1267
-            ],
-            "score": "0.9248046875",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1440,
-                1161,
-                1643,
-                1267
-            ],
-            "score": "0.9208984375",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1436,
-                1163,
-                1644,
-                1275
-            ],
-            "score": "0.904296875",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1439,
-                1162,
-                1644,
-                1274
-            ],
-            "score": "0.91845703125",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1439,
-                1163,
-                1644,
-                1268
-            ],
-            "score": "0.91845703125",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1440,
-                1163,
-                1645,
-                1269
-            ],
-            "score": "0.92236328125",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1440,
-                1160,
-                1643,
-                1268
-            ],
-            "score": "0.92724609375",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1440,
-                1161,
-                1643,
-                1269
-            ],
-            "score": "0.927734375",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1440,
-                1161,
-                1643,
-                1265
-            ],
-            "score": "0.92578125",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1440,
-                1161,
-                1643,
-                1267
-            ],
-            "score": "0.91845703125",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1440,
-                1161,
-                1643,
-                1266
-            ],
-            "score": "0.91845703125",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1441,
-                1161,
-                1644,
-                1266
-            ],
-            "score": "0.923828125",
-            "label": "Inactive_Vehicle"
-        }
-    ],
-    [
-        {
-            "coordinate": [
-                1440,
-                1161,
-                1643,
-                1267
-            ],
-            "score": "0.9248046875",
-            "label": "Inactive_Vehicle"
-        }
-    ]
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
 ]
