@@ -318,6 +318,7 @@ class Detector:
             t1 = self.time_synchronized()
             pred = self.model(img, augment=self.opt.augment)[0]
             t2 = self.time_synchronized()
+            print("Inference Time:", (t2-t1) )
 
             # Apply NMS
             pred = self.non_max_suppression(pred, self.configuration.MIN_SCORE, self.opt.iou_thres,
